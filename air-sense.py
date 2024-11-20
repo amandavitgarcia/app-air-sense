@@ -4,22 +4,23 @@
 #include <ArduinoJson.h>
 
 // Dados do WiFi
-#define WIFI_SSID "SSID"
-#define WIFI_PASSWORD "SENHA"
- 
+#define WIFI_SSID "SterbenTest2"
+#define WIFI_PASSWORD "Um23qu@tro_56"
+
 // Telegram BOT Token (Botfather)
-#define BOT_TOKEN "TOKEN"
+#define BOT_TOKEN "2101023402:AAHSKtWliL_PhTTxsgDKY5_QTAJD3oW6n_0"
 
 // Use @myidbot (IDBot) para saber qual o seu ID
-#define CHAT_ID "0123"
+#define CHAT_ID "-468534730"
 
 WiFiClientSecure secured_client;
 UniversalTelegramBot bot(BOT_TOKEN, secured_client);
 
 #define MQ135_PIN A0  // Pino do sensor MQ-135
-#define LIMITE_AR_RUIM 120  // Valor de limite para qualidade do ar ruim
+#define LIMITE_AR_RUIM 115  // Valor de limite para qualidade do ar ruim
+const int ledPin = D0;
 
-bool flagArRuim = true;  // Controle para evitar mensagens repetidas
+bool flagArRuim = true;  
 
 // Função para conectar ao WiFi
 void conectarWiFi() {
@@ -27,7 +28,7 @@ void conectarWiFi() {
   Serial.println(WIFI_SSID);
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  secured_client.setInsecure();  // Certificado seguro
+  secured_client.setInsecure();  
 
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
@@ -63,12 +64,14 @@ void verificarQualidadeAr() {
 
   if (valorSensor > LIMITE_AR_RUIM) {
     if (flagArRuim) {  // Envia mensagem apenas uma vez para cada mudança
+      digitalWrite(ledPin, HIGH);
       Serial.println("Alerta: Qualidade do ar ruim detectada!");
       enviarMensagemTelegram("⚠ Alerta: Qualidade do ar está ruim! Valor: " + String(valorSensor));
       flagArRuim = false;  // Bloqueia mensagens repetidas
     }
   } else {
     if (!flagArRuim) {  // Envia mensagem de normalização uma vez
+      digitalWrite(ledPin, LOW);
       Serial.println("Qualidade do ar voltou ao normal.");
       enviarMensagemTelegram("✅ Qualidade do ar está boa novamente. Valor: " + String(valorSensor));
       flagArRuim = true;  // Permite novo envio se o ar piorar
@@ -81,12 +84,12 @@ void setup() {
 
   Serial.begin(115200);
   Serial.println();
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
 
   // Conecta ao WiFi
   conectarWiFi();
 
-  // Sincroniza o horário
-  sincronizarTempo();
 
   // Envia mensagem inicial
   enviarMensagemTelegram("🤖 Bot iniciado! Monitorando a qualidade do ar...");

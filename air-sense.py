@@ -1,17 +1,21 @@
+# Amanda Vitoria Garcia - 10290199
+# Ewellyn Millena dos Santos - 10408024
+# Projeto AirSense: Monitoramento Inteligente da Qualidade do Ar 
+
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
 #include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
 
 // Dados do WiFi
-#define WIFI_SSID "SterbenTest2"
-#define WIFI_PASSWORD "Um23qu@tro_56"
+#define WIFI_SSID "SSID"
+#define WIFI_PASSWORD "SENHA"
 
 // Telegram BOT Token (Botfather)
-#define BOT_TOKEN "2101023402:AAHSKtWliL_PhTTxsgDKY5_QTAJD3oW6n_0"
+#define BOT_TOKEN "TOKEN"
 
 // Use @myidbot (IDBot) para saber qual o seu ID
-#define CHAT_ID "-468534730"
+#define CHAT_ID "CHATID"
 
 WiFiClientSecure secured_client;
 UniversalTelegramBot bot(BOT_TOKEN, secured_client);
